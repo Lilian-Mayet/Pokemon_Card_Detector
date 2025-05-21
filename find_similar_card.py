@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
 
         # Pour pHash, des valeurs de 0 à 5 sont des correspondances très fortes, 5-10 sont de bonnes correspondances.
-        HAMMING_DISTANCE_THRESHOLD = 8
+        HAMMING_DISTANCE_THRESHOLD = 14
 
         matched_card_info = find_matching_card(input_image_file, all_hashed_cards, max_hamming_distance=HAMMING_DISTANCE_THRESHOLD)
 

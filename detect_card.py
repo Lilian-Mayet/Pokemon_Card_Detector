@@ -43,6 +43,7 @@ def detect_card_boxes(image_path):
         if len(approx) == 4:
             card_contours.append(approx)
 
+    return card_contours
     # Draw the detected contours
     output = image.copy()
     cv2.drawContours(output, card_contours, -1, (0, 255, 0), 3)
