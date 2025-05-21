@@ -26,7 +26,7 @@ def load_hashed_data(json_path):
         return None
 
 
-def find_matching_card(input_image_path, hashed_data, max_hamming_distance=10):
+def find_matching_card(input_image, hashed_data, max_hamming_distance=10):
     """
     Trouve la carte la plus correspondante dans les données hachées pour une image d'entrée.
 
@@ -40,20 +40,11 @@ def find_matching_card(input_image_path, hashed_data, max_hamming_distance=10):
     Returns:
         dict: Le dictionnaire de la carte correspondante ou None si aucune correspondance satisfaisante n'est trouvée.
     """
-    if not os.path.exists(input_image_path):
-        print(f"Erreur : Le fichier image d'entrée '{input_image_path}' n'a pas été trouvé.")
-        return None
 
-    try:
-        input_image = Image.open(input_image_path)
-        input_hash = imagehash.phash(input_image) # Calcule le pHash de l'image d'entrée
-        print(f"Hachage de l'image d'entrée '{input_image_path}': {input_hash}")
-    except FileNotFoundError:
-        print(f"Erreur : Le fichier image d'entrée '{input_image_path}' n'a pas été trouvé.")
-        return None
-    except Exception as e:
-        print(f"Erreur lors du traitement de l'image d'entrée '{input_image_path}': {e}")
-        return None
+
+    input_hash = imagehash.phash(input_image) # Calcule le pHash de l'image d'entrée
+
+
 
     best_match = None
     smallest_distance = float('inf')
@@ -82,9 +73,12 @@ def find_matching_card(input_image_path, hashed_data, max_hamming_distance=10):
         return best_match
     else:
         print("\nAucune correspondance satisfaisante trouvée dans la base de données.")
-        if best_match: # S'il y avait une meilleure correspondance mais qu'elle dépassait le seuil
-            print(f"(La correspondance la plus proche était '{best_match['name']}' avec une distance de {smallest_distance}, ce qui est > {max_hamming_distance})")
-        return None
+        to_return = {
+                "id": "Not ID",
+                "name": "Not found",
+                "hash": "ba7ae1e504989dc5"
+                }
+        return to_return
 
 if __name__ == "__main__":
     # Charger les données de hachage

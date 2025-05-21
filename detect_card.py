@@ -1,18 +1,14 @@
 import cv2
 import numpy as np
 
-def detect_card_boxes(image_path):
-    # Load the image
-    image = cv2.imread(image_path)
-    if image is None:
-        print("Error: Could not load image.")
-        return
+def detect_card_boxes(image,resize_height):
+
 
     orig = image.copy()
     height, width = image.shape[:2]
     
     # Resize for faster processing
-    resize_height = 1000
+    
     scale = resize_height / height
     image = cv2.resize(image, (int(width * scale), resize_height))
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -21,13 +17,13 @@ def detect_card_boxes(image_path):
     gray = cv2.equalizeHist(gray)
 
     # Edge detection
-    edged = cv2.Canny(gray, 50, 150)
+    edged = cv2.Canny(gray, 100, 150)
 
     # Find contours
     contours, _ = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    min_area = 250
-    max_area = 1 * image.shape[0] * image.shape[1]
+    min_area = 50
+    max_area = 0.8 * image.shape[0] * image.shape[1]
     card_contours = []
 
     for cnt in contours:
@@ -43,7 +39,8 @@ def detect_card_boxes(image_path):
         if len(approx) == 4:
             card_contours.append(approx)
 
-    return card_contours
+    #return card_contours
+
     # Draw the detected contours
     output = image.copy()
     cv2.drawContours(output, card_contours, -1, (0, 255, 0), 3)
@@ -56,5 +53,6 @@ def detect_card_boxes(image_path):
 
 # Example usage
 if __name__ == "__main__":
-    image_path = "data_for_testing/binder1.png"  # Replace with your image path
-    detect_card_boxes(image_path)
+    image_path = "data_for_testing/test.jpg"  # Replace with your image path
+    image = cv2.imread(image_path)
+    detect_card_boxes(image,1000)
